@@ -26,86 +26,56 @@ class Board:
 			for col in range(self.size):
 				copied_board[row][col] = original_board[row][col]
 
-	def move_down(self):
-		self.copy_over(self.board, self.copy_board)
-
-		for row in range(self.size - 2, -1, -1):
-			for col in range(self.size - 1, -1, -1):
-				lower_row = row + 1
-				finished = False
-				while self.in_bounds(lower_row) and not finished:
-					if self.copy_board[lower_row][col] == self.EMPTY:
-						self.copy_board[lower_row][col] = self.board[row][col]
-						self.copy_board[lower_row-1][col] = self.EMPTY
-					elif self.copy_board[lower_row][col] == self.board[row][col]:
-						self.copy_board[lower_row][col] = self.board[row][col] * 2
-						self.copy_board[lower_row-1][col] = self.EMPTY
-						finished = True
-					else:
-						finished = True
-					lower_row += 1
-		self.copy_over(self.copy_board, self.board)
-
 	def move_left(self):
-		self.copy_over(self.board, self.copy_board)
-
-		for row in range(self.size):
-			for col in range(1, self.size):
-				left_col = col - 1
-				finished = False
-				while self.in_bounds(left_col) and not finished:
-					if self.copy_board[row][left_col] == self.EMPTY:
-						self.copy_board[row][left_col] = self.board[row][col]
-						self.copy_board[row][left_col+1] = self.EMPTY
-					elif self.copy_board[row][left_col] == self.board[row][col]:
-						self.copy_board[row][left_col] = self.board[row][col] * 2
-						self.copy_board[row][left_col+1] = self.EMPTY
-						finished = True
-					else:
-						finished = True
-					left_col -= 1
-
-		self.copy_over(self.copy_board, self.board)
+		self.move_horizontal(row_start=0, row_end=self.size, col_start=1, col_end=self.size, delta=1)
 
 	def move_right(self):
+		self.move_horizontal(row_start=self.size-1, row_end=-1, col_start=self.size-2, col_end=-1, delta=-1)
+
+	def move_horizontal(self, row_start, row_end, col_start, col_end, delta):
 		self.copy_over(self.board, self.copy_board)
 
-		for row in range(self.size-1, -1, -1):
-			for col in range(self.size-2, -1, -1):
-				right_col = col + 1
+		for row in range(row_start, row_end, delta):
+			for col in range(col_start, col_end, delta):
+				next_col = col - delta
 				finished = False
-				while self.in_bounds(right_col) and not finished:
-					if self.copy_board[row][right_col] == self.EMPTY:
-						self.copy_board[row][right_col] = self.board[row][col]
-						self.copy_board[row][right_col-1] = self.EMPTY
-					elif self.copy_board[row][right_col] == self.board[row][col]:
-						self.copy_board[row][right_col] = self.board[row][col] * 2
-						self.copy_board[row][right_col-1] = self.EMPTY
+				while self.in_bounds(next_col) and not finished:
+					if self.copy_board[row][next_col] == self.EMPTY:
+						self.copy_board[row][next_col] = self.board[row][col]
+						self.copy_board[row][next_col + delta] = self.EMPTY
+					elif self.copy_board[row][next_col] == self.board[row][col]:
+						self.copy_board[row][next_col] = self.board[row][col] * 2
+						self.copy_board[row][next_col + delta] = self.EMPTY
 						finished = True
 					else:
 						finished = True
-					right_col += 1
-
+					next_col -= delta
 		self.copy_over(self.copy_board, self.board)
 
 	def move_up(self):
+		self.move_vertical(row_start=1, row_end=self.size, col_start=0, col_end=self.size, delta=1)
+
+	def move_down(self):
+		self.move_vertical(row_start=self.size-2, row_end=-1, col_start=self.size-1, col_end=-1, delta=-1)
+
+	def move_vertical(self, row_start, row_end, col_start, col_end, delta):
 		self.copy_over(self.board, self.copy_board)
 
-		for row in range(1, self.size):
-			for col in range(self.size):
-				upper_row = row - 1
+		for row in range(row_start, row_end, delta):
+			for col in range(col_start, col_end, delta):
+				next_row = row - delta
 				finished = False
-				while self.in_bounds(upper_row) and not finished:
-					if self.copy_board[upper_row][col] == self.EMPTY:
-						self.copy_board[upper_row][col] = self.board[row][col]
-						self.copy_board[upper_row+1][col] = self.EMPTY
-					elif self.copy_board[upper_row][col] == self.board[row][col]:
-						self.copy_board[upper_row][col] = self.board[row][col] * 2
-						self.copy_board[upper_row+1][col] = self.EMPTY
+				while self.in_bounds(next_row) and not finished:
+					if self.copy_board[next_row][col] == self.EMPTY:
+						self.copy_board[next_row][col] = self.board[row][col]
+						self.copy_board[next_row + delta][col] = self.EMPTY
+					elif self.copy_board[next_row][col] == self.board[row][col]:
+						self.copy_board[next_row][col] = self.board[row][col] * 2
+						self.copy_board[next_row + delta][col] = self.EMPTY
 						finished = True
 					else:
 						finished = True
-					upper_row -= 1
+					next_row -= delta
 		self.copy_over(self.copy_board, self.board)
 
 	def place_cell(self, cell, x, y):
@@ -132,4 +102,3 @@ class Board:
 			if self.board[x][y] == self.EMPTY:
 				self.board[x][y] = cell
 				successful = True
-
