@@ -1,6 +1,7 @@
 import random
 from cell import Cell
 
+
 class Board:
 	EMPTY = Cell(0)
 
@@ -24,6 +25,26 @@ class Board:
 		for row in range(self.size):
 			for col in range(self.size):
 				copied_board[row][col] = original_board[row][col]
+
+	def move_down(self):
+		self.copy_over(self.board, self.copy_board)
+
+		for row in range(self.size - 2, -1, -1):
+			for col in range(self.size - 1, -1, -1):
+				lower_row = row + 1
+				finished = False
+				while self.in_bounds(lower_row) and not finished:
+					if self.copy_board[lower_row][col] == self.EMPTY:
+						self.copy_board[lower_row][col] = self.board[row][col]
+						self.copy_board[lower_row-1][col] = self.EMPTY
+					elif self.copy_board[lower_row][col] == self.board[row][col]:
+						self.copy_board[lower_row][col] = self.board[row][col] * 2
+						self.copy_board[lower_row-1][col] = self.EMPTY
+						finished = True
+					else:
+						finished = True
+					lower_row += 1
+		self.copy_over(self.copy_board, self.board)
 
 	def move_left(self):
 		self.copy_over(self.board, self.copy_board)
@@ -67,6 +88,26 @@ class Board:
 
 		self.copy_over(self.copy_board, self.board)
 
+	def move_up(self):
+		self.copy_over(self.board, self.copy_board)
+
+		for row in range(1, self.size):
+			for col in range(self.size):
+				upper_row = row - 1
+				finished = False
+				while self.in_bounds(upper_row) and not finished:
+					if self.copy_board[upper_row][col] == self.EMPTY:
+						self.copy_board[upper_row][col] = self.board[row][col]
+						self.copy_board[upper_row+1][col] = self.EMPTY
+					elif self.copy_board[upper_row][col] == self.board[row][col]:
+						self.copy_board[upper_row][col] = self.board[row][col] * 2
+						self.copy_board[upper_row+1][col] = self.EMPTY
+						finished = True
+					else:
+						finished = True
+					upper_row -= 1
+		self.copy_over(self.copy_board, self.board)
+
 	def place_cell(self, cell, x, y):
 		"""Places a given cell at a given location on the board"""
 		self.board[x][y] = cell
@@ -84,11 +125,11 @@ class Board:
 		else:
 			cell = Cell(4)
 
-		placeSuccess = False
-		while not placeSuccess:
+		successful = False
+		while not successful:
 			x = random.randint(0, self.size-1)
 			y = random.randint(0, self.size-1)
 			if self.board[x][y] == self.EMPTY:
 				self.board[x][y] = cell
-				placeSuccess = True
+				successful = True
 
