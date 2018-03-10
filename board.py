@@ -14,17 +14,41 @@ class Board:
 		string = ""
 		for x in range(self.size):
 			for y in range(self.size):
-				string += str(self.board[x][y]) + " "
+				string += "{:<5}".format(str(self.board[x][y])) + " "
 			string += "\n"
 		return string
 
 	def in_bounds(self, value):
 		return 0 <= value < self.size
 
+	def can_move(self):
+		for row in range(self.size):
+			for col in range(self.size):
+				movable_cells = self.check_neighbors(row, col)
+				if movable_cells == 1:
+					return True
+		return False
+
+	def check_neighbors(self, row, col):
+		for x in range(-1, 2):
+			for y in range(-1, 2):
+				if row + x != 0 or col + y != 0:
+					if self.in_bounds(row + x) and self.in_bounds(col + y):
+						if self.board[row+x][col+y] == self.EMPTY or self.board[row+x][col+x] == self.board[row][col]:
+							return 1
+		return 0
+
 	def copy_over(self, original_board, copied_board):
 		for row in range(self.size):
 			for col in range(self.size):
 				copied_board[row][col] = original_board[row][col]
+
+	def has_free_space(self):
+		for row in range(self.size):
+			for col in range(self.size):
+				if self.board[row][col] == self.EMPTY:
+					return True
+		return False
 
 	def move_left(self):
 		self.move_horizontal(row_start=0, row_end=self.size, col_start=1, col_end=self.size, delta=1)
@@ -87,6 +111,8 @@ class Board:
 			into an empty spot. Currently does not check
 			if the board is filled or not
 		"""
+		if not self.has_free_space():
+			return
 
 		# randint's bounds are inclusive
 		num = random.randint(0, 1)
