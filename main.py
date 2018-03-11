@@ -7,6 +7,7 @@ def main():
 	print(board)
 
 	client_input = "s"
+
 	while client_input is not "q" and board.can_move():
 		client_input = input()
 		if client_input is "u":

@@ -3,7 +3,7 @@ from cell import Cell
 
 
 class Board:
-	EMPTY = Cell(0)
+	EMPTY = Cell(0, False)
 
 	def __init__(self, size):
 		self.size = size
@@ -34,7 +34,7 @@ class Board:
 			for y in range(-1, 2):
 				if row + x != 0 or col + y != 0:
 					if self.in_bounds(row + x) and self.in_bounds(col + y):
-						if self.board[row+x][col+y] == self.EMPTY or self.board[row+x][col+x] == self.board[row][col]:
+						if self.board[row+x][col+y] == self.EMPTY or self.board[row+x][col+y] == self.board[row][col]:
 							return 1
 		return 0
 
@@ -42,6 +42,7 @@ class Board:
 		for row in range(self.size):
 			for col in range(self.size):
 				copied_board[row][col] = original_board[row][col]
+				copied_board[row][col].ctt = False
 
 	def has_free_space(self):
 		for row in range(self.size):
@@ -117,9 +118,9 @@ class Board:
 		# randint's bounds are inclusive
 		num = random.randint(0, 1)
 		if num is 0:
-			cell = Cell(2)
+			cell = Cell(2, False)
 		else:
-			cell = Cell(4)
+			cell = Cell(4, False)
 
 		successful = False
 		while not successful:
