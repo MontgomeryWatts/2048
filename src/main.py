@@ -4,7 +4,6 @@ from board import Board
 def main():
 
 	board = Board(4)
-	board.place_random_cell()
 	print(board)
 
 	client_input = "s"
@@ -20,6 +19,11 @@ def main():
 		elif client_input is "r":
 			board.move_right()
 		print(board)
+
+	if board.has_2048():
+		print("You win!")
+	else:
+		print("Game over!")
 
 
 if __name__ == "__main__":
