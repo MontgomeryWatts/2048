@@ -1,5 +1,6 @@
 from board import Board
 
+
 def main():
 
 	board = Board(4)
@@ -8,7 +9,7 @@ def main():
 
 	client_input = "s"
 
-	while client_input is not "q" and board.can_move():
+	while client_input is not "q" and board.game_not_over():
 		client_input = input()
 		if client_input is "u":
 			board.move_up()
@@ -18,7 +19,6 @@ def main():
 			board.move_left()
 		elif client_input is "r":
 			board.move_right()
-		board.place_random_cell()
 		print(board)
 
 
