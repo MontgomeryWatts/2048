@@ -173,3 +173,7 @@ class Board:
 			if self.board[x][y] == self.EMPTY:
 				self.board[x][y] = cell
 				successful = True
+
+	def reset_game(self):
+		self.board = [[self.EMPTY for col in range(self.size)] for row in range(self.size)]
+		self.place_random_cell()
