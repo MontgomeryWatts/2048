@@ -31,7 +31,6 @@ pygame.draw.rect(DISPLAY_SURF, (255,255,255), BOARD_RECT)
 
 def draw_board(board):
 	cell_dimension = BOARD_DIMENSION / board.size
-	print(board)
 	for row in range(board.size):
 		for col in range(board.size):
 			cell_top_offset = BOARD_OFFSET + (row * cell_dimension)
