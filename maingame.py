@@ -31,6 +31,7 @@ pygame.draw.rect(DISPLAY_SURF, (255,255,255), BOARD_RECT)
 
 def draw_board(board):
 	cell_dimension = BOARD_DIMENSION / board.size
+	print(board)
 	for row in range(board.size):
 		for col in range(board.size):
 			cell_top_offset = BOARD_OFFSET + (row * cell_dimension)
@@ -49,25 +50,21 @@ def draw_board(board):
 BOARD.place_random_cell()
 draw_board(BOARD)
 
-while True: # main game loop
+while BOARD.game_not_over(): # main game loop
 
 	for event in pygame.event.get():
 		if event.type == KEYUP:
 			if event.key == K_w or event.key == K_UP:
 				if BOARD.move_up():
-					BOARD.place_random_cell()
 					draw_board(BOARD)
 			if event.key == K_a or event.key == K_LEFT:
 				if BOARD.move_left():
-					BOARD.place_random_cell()
 					draw_board(BOARD)
 			if event.key == K_s or event.key == K_DOWN:
 				if BOARD.move_down():
-					BOARD.place_random_cell()
 					draw_board(BOARD)
 			if event.key == K_d or event.key == K_RIGHT:
 				if BOARD.move_right():
-					BOARD.place_random_cell()
 					draw_board(BOARD)
 
 		if event.type == QUIT:
@@ -77,4 +74,3 @@ while True: # main game loop
 			sys.exit()
 
 	pygame.display.update()
-

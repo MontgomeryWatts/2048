@@ -21,12 +21,6 @@ class Board:
 	def in_bounds(self, value):
 		return 0 <= value < self.size
 
-	def board_has_changed(self):
-		for row in range(self.size):
-			for col in range(self.size):
-				if self.board[row][col] != self.copy_board[row][col]:
-					return True
-		return False
 
 	def can_move(self):
 		for row in range(self.size):
@@ -49,10 +43,21 @@ class Board:
 		for row in range(self.size):
 			for col in range(self.size):
 				copied_board[row][col] = original_board[row][col]
+				copied_board[row][col].changed = False
+
+	def game_not_over(self):
+		return self.can_move() and not self.has_2048()
 
 	def get_cell_at(self, row, col):
 		if self.in_bounds(row) and self.in_bounds(col):
 			return self.board[row][col]
+
+	def has_2048(self):
+		for row in range(self.size):
+			for col in range(self.size):
+				if self.board[row][col].value == 2048:
+					return True
+		return False
 
 	def has_free_space(self):
 		for row in range(self.size):
@@ -73,24 +78,31 @@ class Board:
 
 		self.copy_over(self.board, self.copy_board)
 
+		board_has_changed = False
 		for row in range(row_start, row_end, delta):
 			for col in range(col_start, col_end, delta):
-				next_col = col - delta
-				finished = False
-				while self.in_bounds(next_col) and not finished:
-					if self.copy_board[row][next_col] == self.EMPTY:
-						self.copy_board[row][next_col] = self.board[row][col]
-						self.copy_board[row][next_col + delta] = self.EMPTY
-					elif self.copy_board[row][next_col] == self.board[row][col]:
-						self.copy_board[row][next_col] = self.board[row][col] * 2
-						self.copy_board[row][next_col + delta] = self.EMPTY
-						finished = True
-					else:
-						finished = True
-					next_col -= delta
+				if not self.board[row][col] == self.EMPTY:
+					next_col = col - delta
+					finished = False
+					while self.in_bounds(next_col) and not finished:
+						if self.copy_board[row][next_col] == self.EMPTY:
+							self.copy_board[row][next_col] = self.board[row][col]
+							self.copy_board[row][next_col + delta] = self.EMPTY
+							board_has_changed = True
+						elif self.copy_board[row][next_col] == self.board[row][col]:
+							self.copy_board[row][next_col] = self.board[row][col] * 2
+							self.copy_board[row][next_col + delta] = self.EMPTY
+							board_has_changed = True
+							finished = True
+						else:
+							finished = True
+						next_col -= delta
 
-		if self.board_has_changed():
+		if board_has_changed:
 			self.copy_over(self.copy_board, self.board)
+			if self.has_free_space():
+				self.place_random_cell()
+
 			return True
 		return False
 
@@ -106,24 +118,31 @@ class Board:
 
 		self.copy_over(self.board, self.copy_board)
 
+		board_has_changed = False
 		for row in range(row_start, row_end, delta):
 			for col in range(col_start, col_end, delta):
-				next_row = row - delta
-				finished = False
-				while self.in_bounds(next_row) and not finished:
-					if self.copy_board[next_row][col] == self.EMPTY:
-						self.copy_board[next_row][col] = self.board[row][col]
-						self.copy_board[next_row + delta][col] = self.EMPTY
-					elif self.copy_board[next_row][col] == self.board[row][col]:
-						self.copy_board[next_row][col] = self.board[row][col] * 2
-						self.copy_board[next_row + delta][col] = self.EMPTY
-						finished = True
-					else:
-						finished = True
-					next_row -= delta
+				if not self.board[row][col] == self.EMPTY:
+					next_row = row - delta
+					finished = False
+					while self.in_bounds(next_row) and not finished:
+						if self.copy_board[next_row][col] == self.EMPTY:
+							self.copy_board[next_row][col] = self.board[row][col]
+							self.copy_board[next_row + delta][col] = self.EMPTY
+							board_has_changed = True
+						elif self.copy_board[next_row][col] == self.board[row][col]:
+							self.copy_board[next_row][col] = self.board[row][col] * 2
+							self.copy_board[next_row + delta][col] = self.EMPTY
+							board_has_changed = True
+							finished = True
+						else:
+							finished = True
+						next_row -= delta
 
-		if self.board_has_changed():
+		if board_has_changed:
 			self.copy_over(self.copy_board, self.board)
+			if self.has_free_space():
+				self.place_random_cell()
+
 			return True
 		return False
 
