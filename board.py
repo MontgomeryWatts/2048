@@ -21,6 +21,13 @@ class Board:
 	def in_bounds(self, value):
 		return 0 <= value < self.size
 
+	def board_has_changed(self):
+		for row in range(self.size):
+			for col in range(self.size):
+				if self.board[row][col] != self.copy_board[row][col]:
+					return True
+		return False
+
 	def can_move(self):
 		for row in range(self.size):
 			for col in range(self.size):
@@ -43,6 +50,10 @@ class Board:
 			for col in range(self.size):
 				copied_board[row][col] = original_board[row][col]
 
+	def get_cell_at(self, row, col):
+		if self.in_bounds(row) and self.in_bounds(col):
+			return self.board[row][col]
+
 	def has_free_space(self):
 		for row in range(self.size):
 			for col in range(self.size):
@@ -51,12 +62,15 @@ class Board:
 		return False
 
 	def move_left(self):
-		self.move_horizontal(row_start=0, row_end=self.size, col_start=1, col_end=self.size, delta=1)
+		return self.move_horizontal(row_start=0, row_end=self.size, col_start=1, col_end=self.size, delta=1)
 
 	def move_right(self):
-		self.move_horizontal(row_start=self.size-1, row_end=-1, col_start=self.size-2, col_end=-1, delta=-1)
+		return self.move_horizontal(row_start=self.size-1, row_end=-1, col_start=self.size-2, col_end=-1, delta=-1)
 
 	def move_horizontal(self, row_start, row_end, col_start, col_end, delta):
+		if not self.can_move():
+			return False
+
 		self.copy_over(self.board, self.copy_board)
 
 		for row in range(row_start, row_end, delta):
@@ -74,15 +88,22 @@ class Board:
 					else:
 						finished = True
 					next_col -= delta
-		self.copy_over(self.copy_board, self.board)
+
+		if self.board_has_changed():
+			self.copy_over(self.copy_board, self.board)
+			return True
+		return False
 
 	def move_up(self):
-		self.move_vertical(row_start=1, row_end=self.size, col_start=0, col_end=self.size, delta=1)
+		return self.move_vertical(row_start=1, row_end=self.size, col_start=0, col_end=self.size, delta=1)
 
 	def move_down(self):
-		self.move_vertical(row_start=self.size-2, row_end=-1, col_start=self.size-1, col_end=-1, delta=-1)
+		return self.move_vertical(row_start=self.size-2, row_end=-1, col_start=self.size-1, col_end=-1, delta=-1)
 
 	def move_vertical(self, row_start, row_end, col_start, col_end, delta):
+		if not self.can_move():
+			return False
+
 		self.copy_over(self.board, self.copy_board)
 
 		for row in range(row_start, row_end, delta):
@@ -100,7 +121,11 @@ class Board:
 					else:
 						finished = True
 					next_row -= delta
-		self.copy_over(self.copy_board, self.board)
+
+		if self.board_has_changed():
+			self.copy_over(self.copy_board, self.board)
+			return True
+		return False
 
 	def place_cell(self, cell, x, y):
 		"""Places a given cell at a given location on the board"""
