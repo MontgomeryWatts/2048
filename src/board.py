@@ -9,6 +9,7 @@ class Board:
 		self.size = size
 		self.board = [[self.EMPTY for col in range(size)] for row in range(size)]
 		self.copy_board = [[self.EMPTY for col in range(size)] for row in range(size)]
+		self.place_random_cell()
 
 	def __str__(self):
 		string = ""
