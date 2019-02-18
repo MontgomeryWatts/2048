@@ -15,32 +15,28 @@ BOARD_DIMENSION = WINDOW_DIMENSION * BOARD_RATIO
 BORDER_DIMENSION = BOARD_DIMENSION + 2
 BORDER_OFFSET = BOARD_OFFSET - 1
 DISPLAY_SURF = pygame.display.set_mode((WINDOW_DIMENSION, WINDOW_DIMENSION))
+BORDER_RECT = (BORDER_OFFSET, BORDER_OFFSET, BORDER_DIMENSION, BORDER_DIMENSION)
+BOARD_RECT = (BOARD_OFFSET, BOARD_OFFSET, BOARD_DIMENSION, BOARD_DIMENSION)
+FONT = pygame.font.SysFont("Arial", 12)
+
 LIGHT_GRAY = (225, 225, 225)
 GRAY = (169,169,169)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 TAN = (210, 180, 140)
-ORANGE = (255, 178, 102)
-DARK_ORANGE = (238, 99, 29)
-PINK = (255, 102, 102)
-RED = (204, 0, 0)
-YELLOW = (255, 255, 51)
-MUSTARD = (225, 225, 20)
+PASTEL_RED = (255, 179, 186)
+PASTEL_ORANGE = (255, 223, 186)
+PASTEL_YELLOW = (255, 255, 186)
+PASTEL_GREEN = (186, 255, 201)
+PASTEL_BLUE = (186, 225, 255)
+PASTLE_PURPLE = (149, 125, 173)
 LIME = (153, 255, 153)
 CYAN = (153, 204, 255)
 PERIWINKLE = (204, 153, 255)
 
-
-BORDER_RECT = (BORDER_OFFSET, BORDER_OFFSET, BORDER_DIMENSION, BORDER_DIMENSION)
-BOARD_RECT = (BOARD_OFFSET, BOARD_OFFSET, BOARD_DIMENSION, BOARD_DIMENSION)
-
-
-FONT = pygame.font.SysFont("Arial", 12)
-
 DISPLAY_SURF.fill(WHITE)
 
 pygame.display.set_caption('2048')
-
 pygame.draw.rect(DISPLAY_SURF, BLACK, BORDER_RECT)
 pygame.draw.rect(DISPLAY_SURF, GRAY, BOARD_RECT)
 
@@ -51,17 +47,17 @@ def get_color(cell_value):
 	elif cell_value == 4:
 		return LIGHT_GRAY
 	elif cell_value == 8:
-		return ORANGE
+		return PASTEL_RED
 	elif cell_value == 16:
-		return DARK_ORANGE
+		return PASTEL_ORANGE
 	elif cell_value == 32:
-		return PINK
+		return PASTEL_YELLOW
 	elif cell_value == 64:
-		return RED
+		return PASTEL_GREEN
 	elif cell_value == 128:
-		return YELLOW
+		return PASTEL_BLUE
 	elif cell_value == 256:
-		return MUSTARD
+		return PASTLE_PURPLE
 	elif cell_value == 512:
 		return LIME
 	elif cell_value == 1024:
@@ -70,6 +66,7 @@ def get_color(cell_value):
 		return PERIWINKLE
 	else:
 		return WHITE
+
 
 def draw_board():
 	cell_dimension = BOARD_DIMENSION / BOARD_SIZE
