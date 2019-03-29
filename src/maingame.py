@@ -86,8 +86,10 @@ def draw_board():
 				pygame.draw.rect(DISPLAY_SURF, color, cell_rect)
 				text = FONT.render(cell.__str__(), True, BLACK)
 
-				# Roughly centers the text of the cell's value
-				DISPLAY_SURF.blit(text, (cell_rect[0] + (cell_rect[2] / 2), cell_rect[1] + (cell_rect[2] / 2)))
+				# Centers the text of the cell's value
+				text_rect = text.get_rect(center=(cell_rect[0] + (cell_rect[2] / 2), cell_rect[1] + (cell_rect[2] / 2)))
+
+				DISPLAY_SURF.blit(text, text_rect)
 
 
 draw_board()
